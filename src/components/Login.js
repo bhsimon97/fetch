@@ -1,48 +1,67 @@
-import { useState } from 'react';
-import { loginFields } from '../constants/formFields';
-import Input from './Input';
-import FormActions from './FormActions'
+import { useState } from "react";
+import { loginFields } from "../constants/formFields";
+import Input from "./Input";
+import FormActions from "./FormActions";
+import axios from "axios";
 
-const fields=loginFields;
+const fields = loginFields;
 let fieldsState = {};
-fields.forEach(field=>fieldsState[field.id]='');
+fields.forEach((field) => (fieldsState[field.id] = ""));
 
-export default function Login(){
-    const [loginState,setLoginState]=useState(fieldsState);
+const apiKey = process.env.REACT_APP_API_KEY;
+const apiUrl = "https://frontend-take-home-service.fetch.com";
 
-    const handleChange=(e)=>{
-        setLoginState({...loginState,[e.target.id]:e.target.value})
-    }
+export default function Login() {
+  //todo: implement loginState after api call
 
-    const handleSubmit=(e)=>{
-        e.preventDefault();
-    }
+  const [loginState, setLoginState] = useState(fieldsState);
 
+  const handleChange = (e) => {
+    setLoginState({ ...loginState, [e.target.id]: e.target.value });
+  };
 
-    return(
-        <form className="mt-8 space-y-6">
-        <div className="-space-y-px">
-            {
-                fields.map(field=>
-                        <Input
-                            key={field.id}
-                            handleChange={handleChange}
-                            value={loginState[field.id]}
-                            labelText={field.labelText}
-                            labelFor={field.labelFor}
-                            id={field.id}
-                            name={field.name}
-                            type={field.type}
-                            isRequired={field.isRequired}
-                            placeholder={field.placeholder}
-                    />
-                
-                )
-            }
-        </div>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userData = {
+      name: loginState.username,
+      email: loginState.email,
+    };
 
-        <FormActions handleSubmit={handleSubmit} text="Login" />
+    axios.defaults.withCredentials = true;
 
-      </form>
-    )
+    axios
+      .post(apiUrl + "/auth/login", userData, {
+        withCredentials: true,
+        headers: {
+          "fetch-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+      })
+      .then(() => {
+        //
+      });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <div className="-space-y-px">
+        {fields.map((field) => (
+          <Input
+            key={field.id}
+            handleChange={handleChange}
+            value={loginState[field.id]}
+            labelText={field.labelText}
+            labelFor={field.labelFor}
+            id={field.id}
+            name={field.name}
+            type={field.type}
+            isRequired={field.isRequired}
+            placeholder={field.placeholder}
+          />
+        ))}
+      </div>
+
+      <FormActions text="Login" />
+    </form>
+  );
 }

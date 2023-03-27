@@ -1,6 +1,3 @@
-export default function FormExtra(){
-    return(
-        <>
-        </>
-    )
+export default function FormExtra() {
+  return <></>;
 }
