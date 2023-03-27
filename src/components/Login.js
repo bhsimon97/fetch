@@ -3,8 +3,6 @@ import { loginFields } from "../constants/formFields";
 import Input from "./Input";
 import FormActions from "./FormActions";
 import axios from "axios";
-import getCookie from "../constants/getCookie";
-import { Navigate } from "react-router-dom";
 
 const fields = loginFields;
 let fieldsState = {};
@@ -49,30 +47,26 @@ export default function Login() {
       });
   };
 
-  if (getCookie("email") !== "") {
-    return <Navigate to="/dashboard" />;
-  } else {
-    return (
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-        <div className="-space-y-px">
-          {fields.map((field) => (
-            <Input
-              key={field.id}
-              handleChange={handleChange}
-              value={loginState[field.id]}
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              id={field.id}
-              name={field.name}
-              type={field.type}
-              isRequired={field.isRequired}
-              placeholder={field.placeholder}
-            />
-          ))}
-        </div>
+  return (
+    <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <div className="-space-y-px">
+        {fields.map((field) => (
+          <Input
+            key={field.id}
+            handleChange={handleChange}
+            value={loginState[field.id]}
+            labelText={field.labelText}
+            labelFor={field.labelFor}
+            id={field.id}
+            name={field.name}
+            type={field.type}
+            isRequired={field.isRequired}
+            placeholder={field.placeholder}
+          />
+        ))}
+      </div>
 
-        <FormActions text="Login" />
-      </form>
-    );
-  }
+      <FormActions text="Login" />
+    </form>
+  );
 }

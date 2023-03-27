@@ -17,9 +17,7 @@ export default function Table() {
         },
       })
       .then((response) => {
-        console.log(response.data.resultIds);
         setDogIds(response.data.resultIds);
-        console.log(dogIds);
       });
   }, []);
 
@@ -35,5 +33,5 @@ export default function Table() {
       .then((response) => console.log(response));
   }, [dogIds]);
 
-  return <></>;
+  return <>table</>;
 }
