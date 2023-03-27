@@ -1,3 +1,5 @@
+import Table from "../components/Table";
+
 export default function Dashboard() {
-  return <></>;
+  return <Table />;
 }

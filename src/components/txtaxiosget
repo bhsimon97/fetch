@@ -1,9 +1,0 @@
-axios
-  .get(apiUrl + "/dogs/breeds", {
-    withCredentials: true,
-    headers: {
-      "fetch-api-key": apiKey,
-      "Content-Type": "application/json",
-    },
-  })
-  .then((response) => console.log(response.status, response));
