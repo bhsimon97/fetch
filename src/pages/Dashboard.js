@@ -3,8 +3,8 @@ import { Navigate } from "react-router-dom";
 import getCookie from "../constants/getCookie";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Search from "../components/Search";
 import Pill from "../components/Pill";
+import Select from "react-select";
 
 export default function Dashboard() {
   const [dogIds, setDogIds] = useState([]);
@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [sortAsc, setSortAsc] = useState(true);
   const [selectedDogs, setSelectedDogs] = useState(new Set());
   const [selectedDogsArr, setSelectedDogsArr] = useState([]);
+  const [allBreeds, setAllBreeds] = useState([]);
+  const [selectedBreeds, setSelectedBreeds] = useState([]);
 
   let sortString;
 
@@ -29,12 +31,15 @@ export default function Dashboard() {
           "fetch-api-key": apiKey,
           "Content-Type": "application/json",
         },
+        params: {
+          breeds: selectedBreeds,
+        },
       })
       .then((response) => {
         setDogIds(response.data.resultIds);
         setNextQuery(response.data.next);
       });
-  }, [sortString]);
+  }, [sortString, selectedBreeds]);
 
   useEffect(() => {
     axios
@@ -49,6 +54,28 @@ export default function Dashboard() {
         setDogData(response.data);
       });
   }, [dogIds]);
+
+  useEffect(() => {
+    axios
+      .get(apiUrl + "/dogs/breeds", {
+        withCredentials: true,
+        headers: {
+          "fetch-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        let array = [];
+        for (let i = 0; i < response.data.length; i++) {
+          array.push({ value: response.data[i], label: response.data[i] });
+        }
+        setAllBreeds(array);
+        console.log(array);
+        console.log("array above");
+        console.log(allBreeds);
+        console.log("allbreeds above");
+      });
+  }, []);
 
   function getNextDogs() {
     axios
@@ -82,13 +109,19 @@ export default function Dashboard() {
         },
       })
       .then((response) => {
-        console.log(response);
+        console.log(response.data.match);
+        setDogIds([response.data.match]);
       });
   }
 
-  function handleSelect(dog) {
+  function handleSelectDogs(dog) {
     setSelectedDogs(selectedDogs.add(dog));
     setSelectedDogsArr(Array.from(selectedDogs));
+  }
+
+  function handleSelectorValues(options) {
+    setSelectedBreeds(options);
+    console.log(selectedBreeds);
   }
 
   function handleRemove(dog) {
@@ -105,17 +138,26 @@ export default function Dashboard() {
     if (dogData.length > 0) {
       return (
         <>
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div className="col-span-full">
-              <Search />
+              <h1 className="text-4xl">Adoption Dashboard</h1>
+              <br />
+              <Select
+                aria-label="Breed Selector"
+                placeholder="Select breeds..."
+                options={allBreeds}
+                isMulti
+                onChange={handleSelectorValues}
+              />
+              <br />
               <button
-                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mr-1 rounded"
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mr-2 mt-1 rounded"
                 onClick={() => setSortAsc(!sortAsc)}
               >
-                Change Sort
+                Change Sort ({sortAsc ? "Asc" : "Desc"})
               </button>
               <button
-                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mx-1 rounded"
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mr-2 mt-1 rounded"
                 onClick={() => getNextDogs()}
               >
                 Next Page
@@ -125,15 +167,23 @@ export default function Dashboard() {
               })}
 
               <button
-                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mx-1 rounded"
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mr-2 mt-1 rounded"
                 onClick={() => getMatchedDog()}
               >
-                Match Dog
+                Find Match
               </button>
             </div>
             {dogData.map((dog) => {
-              return <Card dog={dog} handleSelect={handleSelect} />;
+              return <Card dog={dog} handleSelect={handleSelectDogs} />;
             })}
+            <div className="col-span-full">
+              <button
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mr-2 mt-1 rounded"
+                onClick={() => getNextDogs()}
+              >
+                Next Page
+              </button>
+            </div>
           </div>
         </>
       );

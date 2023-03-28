@@ -9,7 +9,14 @@ export default function LoginPage() {
     return (
       <>
         <div className="max-w-md w-full space-y-8">
-          <Login />
+          <div
+            style={{
+              marginTop: 30 + "%",
+            }}
+          >
+            <h1 className="text-3xl">Login to Pet Adoption Site</h1>
+            <Login />
+          </div>
         </div>
       </>
     );

@@ -12,8 +12,6 @@ const apiKey = process.env.REACT_APP_API_KEY;
 const apiUrl = "https://frontend-take-home-service.fetch.com";
 
 export default function Login() {
-  //todo: implement loginState after api call
-
   const [loginState, setLoginState] = useState(fieldsState);
 
   const handleChange = (e) => {
