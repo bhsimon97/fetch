@@ -8,7 +8,9 @@ export default function LoginPage() {
   } else {
     return (
       <>
-        <Login />
+        <div className="max-w-md w-full space-y-8">
+          <Login />
+        </div>
       </>
     );
   }

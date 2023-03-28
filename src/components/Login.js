@@ -41,8 +41,8 @@ export default function Login() {
         /*Receiving an error from the login endpoint which states "Some cookies are misusing the SameSite attribute - 
         Cookie "AWSALB" does not have a proper SameSite attribute value." which seems to be preventing the JWT from being stored in cookies correctly
         despite the set-cookie header being received. Using a custom cookie as a workaround. */
-        document.cookie = `email= ${userData.email}; max-age=30`;
-        document.cookie = `name= ${userData.name}; max-age=30`;
+        document.cookie = `email= ${userData.email}; max-age=3600`;
+        document.cookie = `name= ${userData.name}; max-age=3600`;
         window.location.reload();
       });
   };
