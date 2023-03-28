@@ -4,12 +4,15 @@ import getCookie from "../constants/getCookie";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Search from "../components/Search";
+import Pill from "../components/Pill";
 
 export default function Dashboard() {
   const [dogIds, setDogIds] = useState([]);
   const [dogData, setDogData] = useState([]);
   const [nextQuery, setNextQuery] = useState();
   const [sortAsc, setSortAsc] = useState(true);
+  const [selectedDogs, setSelectedDogs] = useState(new Set());
+  const [selectedDogsArr, setSelectedDogsArr] = useState([]);
 
   let sortString;
 
@@ -62,6 +65,40 @@ export default function Dashboard() {
       });
   }
 
+  function getMatchedDog() {
+    let selectedDogIds = [];
+
+    for (let i = 0; i < selectedDogsArr.length; i++) {
+      let id = selectedDogsArr[i].id;
+      selectedDogIds.push(id);
+    }
+
+    axios
+      .post(apiUrl + "/dogs/match", selectedDogIds, {
+        withCredentials: true,
+        headers: {
+          "fetch-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  }
+
+  function handleSelect(dog) {
+    setSelectedDogs(selectedDogs.add(dog));
+    setSelectedDogsArr(Array.from(selectedDogs));
+  }
+
+  function handleRemove(dog) {
+    console.log(dog);
+    let newSet = selectedDogs;
+    newSet.delete(dog);
+    setSelectedDogs(newSet);
+    setSelectedDogsArr(Array.from(selectedDogs));
+  }
+
   if (getCookie("email") === "") {
     return <Navigate to="/" />;
   } else {
@@ -78,22 +115,24 @@ export default function Dashboard() {
                 Change Sort
               </button>
               <button
-                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 ml-1 rounded"
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mx-1 rounded"
                 onClick={() => getNextDogs()}
               >
                 Next Page
               </button>
+              {selectedDogsArr.map((dog) => {
+                return <Pill dog={dog} handleRemove={handleRemove} />;
+              })}
+
+              <button
+                className="bg-purple-500 hover:bg-purple-700 text-white py-2 px-4 mx-1 rounded"
+                onClick={() => getMatchedDog()}
+              >
+                Match Dog
+              </button>
             </div>
             {dogData.map((dog) => {
-              return (
-                <Card
-                  name={dog.name}
-                  image={dog.img}
-                  breed={dog.breed}
-                  age={dog.age}
-                  zip={dog.zip_code}
-                />
-              );
+              return <Card dog={dog} handleSelect={handleSelect} />;
             })}
           </div>
         </>
