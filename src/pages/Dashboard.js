@@ -70,10 +70,6 @@ export default function Dashboard() {
           array.push({ value: response.data[i], label: response.data[i] });
         }
         setAllBreeds(array);
-        console.log(array);
-        console.log("array above");
-        console.log(allBreeds);
-        console.log("allbreeds above");
       });
   }, []);
 
@@ -109,7 +105,6 @@ export default function Dashboard() {
         },
       })
       .then((response) => {
-        console.log(response.data.match);
         setDogIds([response.data.match]);
       });
   }
@@ -121,11 +116,9 @@ export default function Dashboard() {
 
   function handleSelectorValues(options) {
     setSelectedBreeds(options);
-    console.log(selectedBreeds);
   }
 
   function handleRemove(dog) {
-    console.log(dog);
     let newSet = selectedDogs;
     newSet.delete(dog);
     setSelectedDogs(newSet);
