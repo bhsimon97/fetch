@@ -2,6 +2,8 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+To run it locally, you will need to include a .env file to hold the API key as an environment variable; the value should be REACT_APP_API_KEY and the value should be the API key itself.
+
 ## Available Scripts
 
 In the project directory, you can run:
