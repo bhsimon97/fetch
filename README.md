@@ -19,6 +19,7 @@ You may also see any lint errors in the console.
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
+**Note:** Due to incompatibilities with ECMAScript, Babel, and Jest, this currently does not work. I'm sure I could get it to work given more time, but wanted to get the project submitted in a timely manner instead.
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
