@@ -4,6 +4,8 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 To run it locally, you will need to include a .env file to hold the API key as an environment variable; the key should be REACT_APP_API_KEY and the value should be the API key itself.
 
+It is available to view at https://fetch-six.vercel.app
+
 ## Available Scripts
 
 In the project directory, you can run:
